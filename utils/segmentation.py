@@ -2,19 +2,18 @@ import cv2
 import numpy as np
 from PIL import Image
 import mediapipe as mp
-
-# TRY-EXCEPT BLOCK TO HANDLE ALL MEDIAPIPE VERSIONS
-try:
-    from mediapipe.python.solutions import face_detection as mp_face_detection
-    from mediapipe.python.solutions import selfie_segmentation as mp_selfie_segmentation
-except ImportError:
-    # Fallback for newer versions where .python subpath might not be needed
-    from mediapipe.solutions import face_detection as mp_face_detection
-    from mediapipe.solutions import selfie_segmentation as mp_selfie_segmentation
+# Direct top-level solution imports
+import mediapipe.solutions.face_detection as mp_face_detection
+import mediapipe.solutions.selfie_segmentation as mp_selfie_segmentation
 
 class ImageSegmenter:
+    """
+    Content-aware segmentation for selective processing.
+    Uses MediaPipe for face detection and simplified segmentation.
+    """
+    
     def __init__(self):
-        # Use the imported modules directly
+        # Initialize MediaPipe Face Detection
         self.mp_face_detection = mp_face_detection
         self.face_detection = self.mp_face_detection.FaceDetection(
             model_selection=1,

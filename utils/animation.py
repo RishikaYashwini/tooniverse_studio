@@ -3,14 +3,14 @@ import cv2
 import numpy as np
 from PIL import Image
 import mediapipe as mp
-
-# TRY-EXCEPT BLOCK TO HANDLE ALL MEDIAPIPE VERSIONS
-try:
-    from mediapipe.python.solutions import face_detection as mp_face_detection
-except ImportError:
-    from mediapipe.solutions import face_detection as mp_face_detection
+# Direct top-level solution import
+import mediapipe.solutions.face_detection as mp_face_detection
 
 class CartoonAnimator:
+    """
+    Create visible animations from cartoonified images.
+    """
+    
     def __init__(self):
         self.mp_face_detection = mp_face_detection
         self.face_detection = self.mp_face_detection.FaceDetection(
