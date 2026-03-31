@@ -1,0 +1,40 @@
+# --- Python & System ---
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+venv/
+env/
+.DS_Store
+Thumbs.db
+
+# --- Streamlit ---
+.streamlit/config.toml
+# Note: Keep the .streamlit folder if you want to share your theme, 
+# but ignore secrets if you add a secrets.toml file later.
+.streamlit/secrets.toml
+
+# --- Project Specific ---
+# Ignore large AI models to prevent GitHub size limit issues
+models/*
+!models/.gitkeep
+
+# Ignore temporary assets or outputs
+assets/screenshot_*.png
+tooniverse_*.png
+tooniverse_*.gif
+tooniverse_*.svg
+
+# --- Distribution / Packaging ---
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
