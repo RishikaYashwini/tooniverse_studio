@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from PIL import Image
 import mediapipe as mp
+from mediapipe.python.solutions import face_detection as mp_face_detection
 
 class ImageSegmenter:
     """
@@ -11,7 +12,7 @@ class ImageSegmenter:
     
     def __init__(self):
         # Initialize MediaPipe Face Detection
-        self.mp_face_detection = mp.solutions.face_detection
+        self.mp_face_detection = mp_face_detection
         self.face_detection = self.mp_face_detection.FaceDetection(
             model_selection=1,
             min_detection_confidence=0.5
