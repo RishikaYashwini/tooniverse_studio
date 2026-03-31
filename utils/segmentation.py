@@ -2,51 +2,31 @@ import cv2
 import numpy as np
 from PIL import Image
 import mediapipe as mp
-# Direct top-level solution imports
-import mediapipe.solutions.face_detection as mp_face_detection
-import mediapipe.solutions.selfie_segmentation as mp_selfie_segmentation
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
 
 class ImageSegmenter:
-    """
-    Content-aware segmentation for selective processing.
-    Uses MediaPipe for face detection and simplified segmentation.
-    """
-    
     def __init__(self):
-        # Initialize MediaPipe Face Detection
-        self.mp_face_detection = mp_face_detection
-        self.face_detection = self.mp_face_detection.FaceDetection(
-            model_selection=1,
-            min_detection_confidence=0.5
-        )
+        # MediaPipe Tasks require a model file (.tflite)
+        # For a quick fix, we use the newer Options structure
+        # Note: You may need to download 'face_detector.tflite' to your models/ folder
+        base_options = python.BaseOptions(model_asset_path='models/face_detector.tflite')
+        options = vision.FaceDetectorOptions(base_options=base_options)
+        self.detector = vision.FaceDetector.create_from_options(options)
     
     def detect_faces(self, image):
-        """
-        Detect faces in the image.
-        
-        Args:
-            image: PIL Image
-        
-        Returns:
-            List of face bounding boxes [(x, y, w, h), ...]
-        """
-        # Convert to RGB numpy array
         img_array = np.array(image)
+        # Convert to MediaPipe Image object
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=img_array)
         
-        # Process with MediaPipe
-        results = self.face_detection.process(img_array)
+        detection_result = self.detector.detect(mp_image)
         
         faces = []
-        if results.detections:
+        if detection_result.detections:
             h, w = img_array.shape[:2]
-            for detection in results.detections:
-                bbox = detection.location_data.relative_bounding_box
-                x = int(bbox.xmin * w)
-                y = int(bbox.ymin * h)
-                width = int(bbox.width * w)
-                height = int(bbox.height * h)
-                faces.append((x, y, width, height))
-        
+            for detection in detection_result.detections:
+                bbox = detection.bounding_box
+                faces.append((bbox.origin_x, bbox.origin_y, bbox.width, bbox.height))
         return faces
     
     def create_face_mask(self, image):
